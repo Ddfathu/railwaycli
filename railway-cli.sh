@@ -286,18 +286,30 @@ menu_deploy() {
         echo -e "${C_YELLOW}${C_BOLD}[6] DEPLOY / REDEPLOY PROJECT${C_RESET}"
         echo -e "Folder: ${C_WHITE}$TARGET_DIR${C_RESET}"
         echo -e "${C_BLUE}------------------------------------------${C_RESET}"
-        echo -e "${C_GREEN}1.${C_RESET} Eksekusi Deploy (railway up --detach)"
+        echo -e "${C_GREEN}1.${C_RESET} Eksekusi Deploy + Pantau Log Langsung (railway up)"
+        echo -e "${C_GREEN}2.${C_RESET} Eksekusi Deploy di Background (railway up --detach)"
         echo -e "${C_RED}0.${C_RESET} Batal / Kembali"
         echo -e "${C_BLUE}------------------------------------------${C_RESET}"
-        read -p "Pilih opsi [0-1]: " dep_opt
-        if [ "$dep_opt" != "1" ]; then
-            return
-        fi
+        read -p "Pilih opsi [0-2]: " dep_opt
 
-        echo -e "\n${C_CYAN}[*] Menjalankan railway up...${C_RESET}"
-        railway up --detach
-        echo -e "${C_GREEN}✓ Deploy berhasil dikirim ke server!${C_RESET}"
-        read -p "Tekan Enter untuk kembali..."
+        case $dep_opt in
+            1)
+                echo -e "\n${C_CYAN}[*] Mengupload & memantau proses build/deploy...${C_RESET}"
+                echo -e "${C_YELLOW}(Tekan Ctrl + C jika ingin keluar dari streaming log)${C_RESET}\n"
+                railway up
+                echo -e "\n${C_GREEN}✓ Proses deploy selesai / terputus dari stream.${C_RESET}"
+                read -p "Tekan Enter untuk kembali..."
+                ;;
+            2)
+                echo -e "\n${C_CYAN}[*] Menjalankan deploy di background...${C_RESET}"
+                railway up --detach
+                echo -e "${C_GREEN}✓ Deploy berhasil dikirim ke server!${C_RESET}"
+                read -p "Tekan Enter untuk kembali..."
+                ;;
+            *)
+                return
+                ;;
+        esac
     fi
 }
 
@@ -699,11 +711,11 @@ while true; do
     echo -e "${C_GREEN} 3.${C_RESET} Clone Repo GitHub ke Folder Projek"
     echo -e "${C_GREEN} 4.${C_RESET} Daftar Project Akun & Link ke Folder"
     echo -e "${C_GREEN} 5.${C_RESET} Unlink Project & Reset Cache (.railway)"
-    echo -e "${C_GREEN} 6.${C_RESET} Deploy / Redeploy (railway up --detach)"
+    echo -e "${C_GREEN} 6.${C_RESET} Deploy / Redeploy (Live Log / Background)"
     echo -e "${C_GREEN} 7.${C_RESET} Ubah Region Akun (Cek & Ubah)"
-    echo -e "${C_GREEN} 8.${C_RESET} Buat / Edit Public Domain(Custom Domain & Port)"
+    echo -e "${C_GREEN} 8.${C_RESET} Buat / Edit Public Domain (Custom Domain & Port)"
     echo -e "${C_GREEN} 9.${C_RESET} Buat TCP Proxy (Auto Port Forward)"
-    echo -e "${C_GREEN}10.${C_RESET} Tambah / Cek Variable (format VARIBEL=value contoh TOKEN=Eyzgbjbg...)"
+    echo -e "${C_GREEN}10.${C_RESET} Tambah / Cek Variable (format VARIABEL=value)"
     echo -e "${C_GREEN}11.${C_RESET} Cek Log Realtime"
     echo -e "${C_RED} 0.${C_RESET} Keluar"
     echo -e "${C_BLUE}==========================================${C_RESET}"
